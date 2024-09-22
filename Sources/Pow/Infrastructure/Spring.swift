@@ -151,111 +151,111 @@ private prefix func - <V: VectorArithmetic>(value: V) -> V {
 }
 
 #if os(iOS) && DEBUG
-import Charts
-
-@available(iOS 16.0, *)
-struct Spring_Previews: PreviewProvider {
-    struct Sample: Identifiable {
-        var x: Double
-        var y: Double
-
-        var id: some Hashable { x }
-    }
-
-    struct Example: Identifiable {
-        var spring: Spring
-
-        var id: some Hashable {
-            spring.zeta
-        }
-
-        var name: String {
-            "zeta:\(spring.zeta)"
-        }
-    }
-
-    struct Preview: View {
-        @State
-        var showDerivatives: Bool = false
-
-        var body: some View {
-            VStack {
-                Toggle("Derivatives", isOn: $showDerivatives)
-
-                let springs = [
-                    Example(spring: Spring(zeta: 0.01, stiffness: 10, mass: 2)),
-                    Example(spring: Spring(zeta: 0.33, stiffness: 10, mass: 2)),
-                    Example(spring: Spring(zeta: 0.66, stiffness: 10, mass: 2)),
-                    Example(spring: Spring(zeta: 0.99, stiffness: 10, mass: 2)),
-                ]
-
-                let x0: Double = 0
-                let v0: Double = 10
-
-                let xs = stride(from: 0, through: 3, by: 0.01)
-
-                Chart(springs) { example in
-                    let spring = example.spring
-
-                    let f = { (t: Double) -> Double in
-                        spring.value(initialPosition: x0, initialVelocity: v0, at: t)
-                    }
-
-                    let p = spring.peakTime(initialPosition: x0, initialVelocity: v0)
-
-                    let samples = xs.map {
-                        Sample(
-                            x: $0,
-                            y: f($0)
-                        )
-                    }
-
-                    ForEach(samples) { sample in
-                        LineMark(
-                            x: .value("x", sample.x),
-                            y: .value("y", sample.y),
-                            series: .value("spring", example.name)
-                        )
-                        .foregroundStyle(by: .value("f", example.name))
-                    }
-
-                    if showDerivatives {
-                        let derivative: [Sample] = xs.map { (t: Double) -> Sample in
-                            let m = x0
-                            let v = v0
-
-                            let y: Double = (exp(spring.delta * (-t)) * (sin(t * spring.omega1) * (m * (pow(spring.delta, 2) + pow(spring.omega1, 2)) + spring.delta * v) - v * spring.omega1 * cos(t * spring.omega1)))/spring.omega1
-
-                            return Sample(
-                                x: t,
-                                y: y
-                            )
-                        }
-
-                        ForEach(derivative) { sample in
-                            LineMark(
-                                x: .value("x", sample.x),
-                                y: .value("y", sample.y),
-                                series: .value("spring", example.name + "'")
-                            )
-                            .foregroundStyle(by: .value("f'", example.name + "'"))
-                        }
-                    }
-
-                    PointMark(
-                        x: .value("x", p),
-                        y: .value("y", f(p))
-                    )
-                    .foregroundStyle(by: .value("peakTime", example.name))
-                }
-                .aspectRatio(1, contentMode: .fit)
-            }
-            .padding()
-        }
-    }
-
-    static var previews: some View {
-        Preview()
-    }
-}
+//import Charts
+//
+//@available(iOS 16.0, *)
+//struct Spring_Previews: PreviewProvider {
+//    struct Sample: Identifiable {
+//        var x: Double
+//        var y: Double
+//
+//        var id: some Hashable { x }
+//    }
+//
+//    struct Example: Identifiable {
+//        var spring: Spring
+//
+//        var id: some Hashable {
+//            spring.zeta
+//        }
+//
+//        var name: String {
+//            "zeta:\(spring.zeta)"
+//        }
+//    }
+//
+//    struct Preview: View {
+//        @State
+//        var showDerivatives: Bool = false
+//
+//        var body: some View {
+//            VStack {
+//                Toggle("Derivatives", isOn: $showDerivatives)
+//
+//                let springs = [
+//                    Example(spring: Spring(zeta: 0.01, stiffness: 10, mass: 2)),
+//                    Example(spring: Spring(zeta: 0.33, stiffness: 10, mass: 2)),
+//                    Example(spring: Spring(zeta: 0.66, stiffness: 10, mass: 2)),
+//                    Example(spring: Spring(zeta: 0.99, stiffness: 10, mass: 2)),
+//                ]
+//
+//                let x0: Double = 0
+//                let v0: Double = 10
+//
+//                let xs = stride(from: 0, through: 3, by: 0.01)
+//
+//                Chart(springs) { example in
+//                    let spring = example.spring
+//
+//                    let f = { (t: Double) -> Double in
+//                        spring.value(initialPosition: x0, initialVelocity: v0, at: t)
+//                    }
+//
+//                    let p = spring.peakTime(initialPosition: x0, initialVelocity: v0)
+//
+//                    let samples = xs.map {
+//                        Sample(
+//                            x: $0,
+//                            y: f($0)
+//                        )
+//                    }
+//
+//                    ForEach(samples) { sample in
+//                        LineMark(
+//                            x: .value("x", sample.x),
+//                            y: .value("y", sample.y),
+//                            series: .value("spring", example.name)
+//                        )
+//                        .foregroundStyle(by: .value("f", example.name))
+//                    }
+//
+//                    if showDerivatives {
+//                        let derivative: [Sample] = xs.map { (t: Double) -> Sample in
+//                            let m = x0
+//                            let v = v0
+//
+//                            let y: Double = (exp(spring.delta * (-t)) * (sin(t * spring.omega1) * (m * (pow(spring.delta, 2) + pow(spring.omega1, 2)) + spring.delta * v) - v * spring.omega1 * cos(t * spring.omega1)))/spring.omega1
+//
+//                            return Sample(
+//                                x: t,
+//                                y: y
+//                            )
+//                        }
+//
+//                        ForEach(derivative) { sample in
+//                            LineMark(
+//                                x: .value("x", sample.x),
+//                                y: .value("y", sample.y),
+//                                series: .value("spring", example.name + "'")
+//                            )
+//                            .foregroundStyle(by: .value("f'", example.name + "'"))
+//                        }
+//                    }
+//
+//                    PointMark(
+//                        x: .value("x", p),
+//                        y: .value("y", f(p))
+//                    )
+//                    .foregroundStyle(by: .value("peakTime", example.name))
+//                }
+//                .aspectRatio(1, contentMode: .fit)
+//            }
+//            .padding()
+//        }
+//    }
+//
+//    static var previews: some View {
+//        Preview()
+//    }
+//}
 #endif
